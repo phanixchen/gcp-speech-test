@@ -332,9 +332,12 @@ namespace ProcessCommand
                 if (iStatus == 0)
                 {
                     iStatus = 10;
-                    return "action";
+                    //return "action";
+                    return "go";
                 }
             }
+
+            if (full.Contains("BAOZHA")) return "explosion_fx";
 
             if (abbr.IndexOf("CUT") == 0 || full == "KA" || full == "CUT")
             {
@@ -345,91 +348,316 @@ namespace ProcessCommand
                 }
             }
 
-            if (iStatus == 10)
-            {
-                // playing, can not edit
-                return "UNKNOW";
-            }
+
+
+
 
             #region 切換 cut
-            if ( full.Contains("XIAYI") || full.Contains("XIA1") || abbr.Contains("XYCUT") || abbr.Contains("XYK") || abbr.Contains("X1CUT") || abbr.Contains("X1K"))
+            if (full.Contains("XIAYI") || full.Contains("XIA1") || abbr.Contains("XYCUT") || abbr.Contains("XYK") || abbr.Contains("X1CUT") || abbr.Contains("X1K"))
             {
-                iCutNum++;
-                if (iCutNum > 6) iCutNum = 6;
-                return "change_cut_" + iCutNum.ToString();
+                return "cut_next";
             }
             if (full.Contains("QIANYI") || full.Contains("QIAN1") || abbr.Contains("QYCUT") || abbr.Contains("QYK") || abbr.Contains("Q1CUT") || abbr.Contains("Q1K"))
             {
-                iCutNum--;
-                if (iCutNum < 1) iCutNum = 1;
-                return "change_cut_" + iCutNum.ToString();
+                return "cut_pre";
             }
-            if (full.Contains("DIYI") || full.Contains("DI1") || abbr.Contains("D1CUT") || abbr.Contains("D1K") || 
+            if (full.Contains("SHANGYI") || full.Contains("SHANG1") || abbr.Contains("SYCUT") || abbr.Contains("SYK") || abbr.Contains("S1CUT") || abbr.Contains("S1K"))
+            {
+                return "cut_pre";
+            }
+            if (full.Contains("DIYI") || full.Contains("DI1") || abbr.Contains("D1CUT") || abbr.Contains("D1K") ||
                 abbr.Contains("DYCUT") || abbr.Contains("DYK"))
             {
                 iCutNum = 1;
-                return "change_cut_" + iCutNum.ToString();
+                //return "change_cut_" + iCutNum.ToString();
+                return "cut_" + iCutNum.ToString();
             }
             if (full.Contains("DIER") || full.Contains("DI2") || abbr.Contains("D2CUT") || abbr.Contains("D2K") || abbr.Contains("DECUT") || abbr.Contains("DEK"))
             {
                 iCutNum = 2;
-                return "change_cut_" + iCutNum.ToString();
+                //return "change_cut_" + iCutNum.ToString();
+                return "cut_" + iCutNum.ToString();
             }
             if (full.Contains("DISAN") || full.Contains("DI3") || abbr.Contains("D3CUT") || abbr.Contains("D3K"))
             {
                 iCutNum = 3;
-                return "change_cut_" + iCutNum.ToString();
+                //return "change_cut_" + iCutNum.ToString();
+                return "cut_" + iCutNum.ToString();
             }
-            if (full.Contains("DISI") || full.Contains("DI4") || abbr.Contains("D4CUT") || abbr.Contains("D4K") )
+            if (full.Contains("DISI") || full.Contains("DI4") || abbr.Contains("D4CUT") || abbr.Contains("D4K"))
             {
                 iCutNum = 4;
-                return "change_cut_" + iCutNum.ToString();
+                //return "change_cut_" + iCutNum.ToString();
+                return "cut_" + iCutNum.ToString();
             }
             if (full.Contains("DIWU") || full.Contains("DI5") || abbr.Contains("D5CUT") || abbr.Contains("D5K") || abbr.Contains("DWCUT") || abbr.Contains("DWK"))
             {
                 iCutNum = 5;
-                return "change_cut_" + iCutNum.ToString();
+                //return "change_cut_" + iCutNum.ToString();
+                return "cut_" + iCutNum.ToString();
             }
             if (full.Contains("DILIU") || full.Contains("DI6") || abbr.Contains("D6CUT") || abbr.Contains("D6K") || abbr.Contains("DLCUT") || abbr.Contains("DLK"))
             {
                 iCutNum = 6;
-                return "change_cut_" + iCutNum.ToString();
+                //return "change_cut_" + iCutNum.ToString();
+                return "cut_" + iCutNum.ToString();
             }
             #endregion
 
             #region 調光 開關燈
-            if (full.Contains("KAIDENG"))
+            if (full.Contains("DENG"))
             {
-                return "on_light";
-            }
-            if (full.Contains("GUANDENG"))
-            {
-                return "off_light";
+                if (full.Contains("GUANDENG"))
+                {
+                    return "light_off";
+                }
+
+                if (full.Contains("KAIDENG"))
+                {
+                    return "light_on";
+                }
+
+                if (full.Contains("LIANG")) return "light_upper";
+                if (full.Contains("AN")) return "light_lower";
             }
 
-            if (full.Contains("DENGGUANG"))
+            if (full.Contains("KAIQI") && (full.Contains("DIAOGUANG") || abbr.Contains("DG")))
             {
-                if (full.Contains("LIANG")) return "upper_light";
-                if (full.Contains("AN")) return "lower_light";
-            }
-
-            if (full.Contains("KAIQI") && (full.Contains("DIAOGUANG") || abbr.Contains("DG") ) )
-            {
-                return "on_posteffect";
+                return "posteffect_on";
             }
             if (full.Contains("GUANBI") && (full.Contains("DIAOGUANG") || abbr.Contains("DG")))
             {
-                return "off_posteffect";
+                return "posteffect_off";
             }
             #endregion
 
-            
-            #region 切換 focus length
-            if (abbr.Contains("ESSLM") || abbr.Contains("24LM") || abbr.Contains("ESLM")) return "change_camera_len_24"; // 鏡頭換成24釐米
-            if (abbr.Contains("SSWLM") || abbr.Contains("35LM") || abbr.Contains("SWLM")) return "change_camera_len_35";// 鏡頭換成35釐米
-            if (full.Contains("ANJIAO") || abbr.Contains("AJJT")) return "change_camera_len_12";// 鏡頭換成廣角
-            if (abbr.Contains("YELM") || abbr.Contains("12LM") || abbr.Contains("SELM")) return "change_camera_len_12";// 鏡頭換成廣角
+            #region 景深
+            if (full.Contains("BIAOZHU") && abbr.Contains("JS")) return "camera_dofdefault";
+            if (full.Contains("BEIJING") && abbr.Contains("MH")) return "camera_dofdefault";
+            if (abbr.Contains("JS") && full.Contains("KAI")) return "camera_dofdefault";
+
+            if (abbr.Contains("YC") && abbr.Contains("JS")) return "camera_dofclear";
+            if (abbr.Contains("BJ") && abbr.Contains("QC")) return "camera_dofclear";
+            if (abbr.Contains("HM") && abbr.Contains("QC")) return "camera_dofclear";
+            if (abbr.Contains("JS") && full.Contains("GUAN")) return "camera_dofclear";
             #endregion
+
+            #region 切換 focus length
+            if (abbr.Contains("ESSLM") || abbr.Contains("24LM") || abbr.Contains("ESLM")) return "camera_len24"; // 鏡頭換成24釐米
+            if (full.Contains("BIAOZHUN") || abbr.Contains("BZJT")) return "camera_len24"; // 鏡頭換成24釐米
+            if (abbr.Contains("SSWLM") || abbr.Contains("35LM") || abbr.Contains("SWLM")) return "camera_len35";// 鏡頭換成35釐米
+            if (full.Contains("WANGYUAN") || abbr.Contains("WYJT")) return "camera_len35";// 鏡頭換成35釐米
+            if (full.Contains("ANJIAO") || abbr.Contains("AJJT")) return "camera_len12";// 鏡頭換成廣角
+            if (abbr.Contains("YELM") || abbr.Contains("12LM") || abbr.Contains("SELM")) return "camera_len12";// 鏡頭換成廣角
+            #endregion
+
+            #region 切換攝影機
+            if ((abbr.Contains("SYJ") || abbr.Contains("JT")) && (abbr.Contains("YH") || abbr.Contains("1H"))) return "camera_c1";   // 切換到一號攝影機
+            if ((abbr.Contains("SYJ") || abbr.Contains("JT")) && (abbr.Contains("EH") || abbr.Contains("2H"))) return "camera_c2";   // 切換到2號攝影機
+            if ((abbr.Contains("SYJ") || abbr.Contains("JT")) && (abbr.Contains("SH") || abbr.Contains("3H"))) return "camera_c3";   // 切換到3號攝影機
+            if ((abbr.Contains("SYJ") || abbr.Contains("JT")) && (abbr.Contains("WH") || abbr.Contains("5H"))) return "camera_c5";   // 切換到5號攝影機
+            if ((abbr.Contains("SYJ") || abbr.Contains("JT")) && (abbr.Contains("LH") || abbr.Contains("6H"))) return "camera_c6";   // 切換到6號攝影機
+            if ((abbr.Contains("SYJ") || abbr.Contains("JT")) && (abbr.Contains("QH") || abbr.Contains("7H"))) return "camera_c7";   // 切換到7號攝影機
+            #endregion
+
+            #region 運鏡
+            if (full.Contains("JIWEI"))
+            {
+                if (full.Contains("ERHAO") || full.Contains("2HAO")) return "camera_posa2";
+                if (full.Contains("SHIAO") || full.Contains("4HAO")) return "camera_posb2";
+            }
+            #endregion
+
+            #region 就定位
+            if (full.Contains("JIUDINGWEI"))
+            {
+                string str = "_onposition";
+
+                if (abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB") ) str = "character" + str;
+                if (abbr.Contains("GS") || abbr.Contains("GW")) str = "monster" + str;
+                return str;
+            }
+            #endregion
+
+            if (full.Contains("ZHENCHA") || full.Contains("CHAKAN"))
+            {
+                string str = "_detect";
+                if (abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB")) str = "character" + str;
+                if (abbr.Contains("GS") || abbr.Contains("GW")) str = "monster" + str;
+                return str;
+            }
+
+            #region 移動
+            if (full.Contains("YIDONG"))
+            {
+                string str = "";
+                if (abbr.Contains("1HWZ") || abbr.Contains("YHWZ") || abbr.Contains("WZ1") || abbr.Contains("WZY") || abbr.Contains("JTDZB") || abbr.Contains("JTZB") || full.Contains("ZUOBIAN")) str = "_pos1";
+                if (abbr.Contains("2HWZ") || abbr.Contains("EHWZ") || abbr.Contains("WZ2") || abbr.Contains("WZE") || abbr.Contains("JTDZJ") || abbr.Contains("JTZJ") || full.Contains("ZHONGJIAN")) str = "_pos2";
+                if (abbr.Contains("3HWZ") || abbr.Contains("SHWZ") || abbr.Contains("WZ3") || abbr.Contains("WZS") || abbr.Contains("JTDYB") || abbr.Contains("JTYB") || full.Contains("YOUBIAN")) str = "_pos3";
+
+                if (abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB")) str = "character" + str;
+                if (abbr.Contains("GS") || abbr.Contains("GW")) str = "monster" + str.Replace("pos", "posd");
+                return str;
+            }
+            #endregion
+
+            #region 靠左右
+            if (full.Contains("KAOZUO"))
+            {
+                string str = "_left";
+                if (abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB")) str = "character" + str;
+                if (abbr.Contains("GS") || abbr.Contains("GW")) str = "monster" + str.Replace("pos", "posd");
+                return str;
+            }
+            if (full.Contains("KAOYOU"))
+            {
+                string str = "_right";
+                if (abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB")) str = "character" + str;
+                if (abbr.Contains("GS") || abbr.Contains("GW")) str = "monster" + str.Replace("pos", "posd");
+                return str;
+            }
+            #endregion
+
+            #region 左右轉
+            if (full.Contains("ZUOZHUAI"))
+            {
+                string str = "_turnleft";
+                if (abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB")) str = "character" + str;
+                if (abbr.Contains("GS") || abbr.Contains("GW")) str = "monster" + str.Replace("pos", "posd");
+                return str;
+            }
+            if (full.Contains("YOUZHUAI"))
+            {
+                string str = "_turnright";
+                if (abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB")) str = "character" + str;
+                if (abbr.Contains("GS") || abbr.Contains("GW")) str = "monster" + str.Replace("pos", "posd");
+                return str;
+            }
+            #endregion
+
+            #region 瞄準
+            if (full.Contains("MIAOZHUN"))
+            {
+                string str = "_aim";
+                string post = full.Substring(full.IndexOf("MIAOZHUN"));
+                if (post.Contains("TOU")) str = str + "head";
+                if (post.Contains("SHENTI")) str = str + "body";
+                if (post.Contains("JIAO") || post.Contains("TUI")) str = str + "foot";
+
+                if (full.Contains("ZHUJIAO") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB")) str = "character" + str;
+                //if (abbr.Contains("GS") || abbr.Contains("GW")) str = "monster" + str.Replace("pos", "posd");
+
+                return str;
+
+            }
+            #endregion
+
+            #region 其他動作
+            if (abbr.Contains("LZZH") || full.Contains("LIZHENG") || full.Contains("ZHANHAO"))
+            {
+                string str = "_standup";
+                if (abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB")) str = "character" + str;
+                return str;
+            }
+
+            if (full.Contains("TIAOWU") || (full.Contains("TIAO") && full.Contains("WU")) )
+            {
+                string str = "_dance";
+                if (abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB")) str = "character" + str;
+                return str;
+            }
+            if (full.Contains("TIAO"))
+            {
+                string str = "_jump";
+                if (abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB")) str = "character" + str;
+                return str;
+            }
+
+            if (abbr.Contains("GWQR") || full.Contains("GUIXIA"))
+            {
+                string str = "_beg";
+                if (abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB")) str = "character" + str;
+                return str;
+            }
+
+            if (full.Contains("CUNXIA"))
+            {
+                string str = "_squat";
+                if (abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB")) str = "character" + str;
+                return str;
+            }
+            if (full.Contains("JINGLI"))
+            {
+                string str = "_salute";
+                if (abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB")) str = "character" + str;
+                return str;
+            }
+
+            if (abbr.Contains("DCQ"))
+            {
+                string str = "_throwweapon";
+                if (abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB")) str = "character" + str;
+                return str;
+            }
+            if (abbr.Contains("HWQ") || (full.Contains("HUAN") && (full.Contains("QIANG") || full.Contains("WUQI"))))
+            {
+                string str = "_changeweapon";
+                if (abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB")) str = "character" + str;
+                return str;
+            }
+            #endregion
+
+            #region 怪物倒下
+            if (full.Contains("JIDAO") || full.Contains("DADAO"))
+            {
+                string str = "_down";
+                if (abbr.Contains("GS") || abbr.Contains("GW")) str = "monster" + str;
+                return str;
+            }
+            #endregion
+
+            #region 攻擊
+            //停止攻擊
+            if (abbr.Contains("TZGJ"))
+            {
+                string str = "_unfire";
+
+                if (abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB")) str = "character" + str;
+                return str;
+            }
+            //攻擊
+            if (full.Contains("GONGJI"))
+            {
+                string str = "_attack";
+                string pre = abbr.Substring(0, abbr.IndexOf("GJ"));
+                string prefull = full.Substring(0, full.IndexOf("GONGJI"));
+                if (pre.Contains("GS") || pre.Contains("GW")) { str = "monster" + str; return str; }
+                if (pre.Contains("JS") || pre.Contains("NZJ") || pre.Contains("ZJ") || prefull.Contains("SHIBING") || pre.Contains("SB")) { str = "character" + str; return str; }
+
+                string pos = abbr.Substring(abbr.IndexOf("GJ"));
+                string posfull = full.Substring(full.IndexOf("GONGJI"));
+                if (pos.Contains("GS") || pos.Contains("GW")) str = "character" + str;
+                if (pos.Contains("JS") || pos.Contains("NZJ") || pos.Contains("ZJ") || posfull.Contains("SHIBING") || pos.Contains("SB")) str = "monster" + str;
+                return str;
+            }
+            #endregion
+
+            #region 射擊
+            if (full.Contains("KAIQIANG") || full.Contains("KAIHUO") || full.Contains("SHEJI"))
+            {
+                string str = "_attack";
+                if (abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ") || full.Contains("SHIBING") || abbr.Contains("SB")) str = "character" + str;
+
+                return str;
+            }
+            #endregion
+
+
+
+
+
+
+
 
             //cut 1
             //if (iCutNum == 1)
@@ -492,12 +720,12 @@ namespace ProcessCommand
 
                 // 主角移動
                 //if (abbr.Contains("ZJYD"))
-                if (abbr.Contains("YD"))
-                {
-                    if (abbr.Contains("WZ1") || abbr.Contains("WZY") || abbr.Contains("JTDZB") || abbr.Contains("JTZB") || full.Contains("ZUOBIAN") ) return "move_character_pos_1";
-                    if (abbr.Contains("WZ2") || abbr.Contains("WZE") || abbr.Contains("JTDZJ") || abbr.Contains("JTZJ") || full.Contains("ZHONGJIAN") ) return "move_character_pos_2";
-                    if (abbr.Contains("WZ3") || abbr.Contains("WZS") || abbr.Contains("JTDYB") || abbr.Contains("JTYB") || full.Contains("YOUBIAN")) return "move_character_pos_3";
-                }
+                //if (abbr.Contains("YD"))
+                //{
+                //    if (abbr.Contains("WZ1") || abbr.Contains("WZY") || abbr.Contains("JTDZB") || abbr.Contains("JTZB") || full.Contains("ZUOBIAN") ) return "move_character_pos_1";
+                //    if (abbr.Contains("WZ2") || abbr.Contains("WZE") || abbr.Contains("JTDZJ") || abbr.Contains("JTZJ") || full.Contains("ZHONGJIAN") ) return "move_character_pos_2";
+                //    if (abbr.Contains("WZ3") || abbr.Contains("WZS") || abbr.Contains("JTDYB") || abbr.Contains("JTYB") || full.Contains("YOUBIAN")) return "move_character_pos_3";
+                //}
 
                 //腳色就定位 from cut 1
                 if ((abbr.Contains("JS") || abbr.Contains("NZJ") || abbr.Contains("ZJ")) && abbr.Contains("DW")) return "onposition_character";    // 角色就定位
@@ -508,8 +736,7 @@ namespace ProcessCommand
                 //    if (full.Contains("ZUO")) return "move_character_left";
                 //    if (full.Contains("YOU")) return "move_character_right";
                 //}
-                if (full.Contains("KAOZUO")) return "move_character_left";
-                if (full.Contains("KAOYOU")) return "move_character_right";
+                
 
 
 
@@ -559,17 +786,9 @@ namespace ProcessCommand
                 }
 
 
-                //怪物怪獸
-                if ((abbr.Contains("GS") || abbr.Contains("GW")) )
-                {
-                    if (abbr.Contains("GJZJ") || abbr.Contains("GJNZJ") || abbr.Contains("GJJS")) return "motion_monster_attack";
+                
 
-                    if (full.Contains("ZHENCHA") || full.Contains("CHAKAN")) return "motion_monster_check";
-
-                    if (full.Contains("JIDAO") || full.Contains("DADAO") ) return "motion_monster_down";
-                }
-
-                if (full.Contains("BAOZHA")) return "explosion_fx";
+                
             }
 
             return (strreturn == "")? "UNKNOW": strreturn;
